@@ -2,6 +2,7 @@ import os
 import requests
 import urllib.parse
 from requests.adapters import HTTPAdapter
+from .ldap import ldap_login
 
 
 class APIClient:
@@ -88,12 +89,27 @@ class APIClient:
         return tasks
 
     def login(self, username, password):
+        ldap_authenticator = ldap_login(username, password)
+        if ldap_authenticator:
+            self.create_or_update_ldap_user(username, password, ldap_authenticator)
         url = f"{self.base_url}/auth/login"
         payload = {"username": username, "password": password}
         response = self.session.post(url=url, json=payload, timeout=3)
         response = self._handle_status(response)
         if "token" in response:
             self._handle_token(response["token"])
+        return response
+
+    def create_or_update_ldap_user(self, username, password, ldap_authenticator):
+        url = f"{self.base_url}/users/sync"
+        payload = {
+            "username": username,
+            "fullName": ldap_authenticator.fullName,
+            "email": ldap_authenticator.mail,
+            "password": password,
+        }
+        response = self.session.post(url=url, json=payload, timeout=3)
+        response = self._handle_status(response)
         return response
 
     def get_users(self):
