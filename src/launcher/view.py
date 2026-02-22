@@ -772,11 +772,13 @@ class MainWindow(BaseWindow):
         self.delete_task_action = QtWidgets.QAction(self)
         self.add_subtask_action = QtWidgets.QAction(self)
         self.assign_task_action = QtWidgets.QAction(self)
+        self.exit_task_action = QtWidgets.QAction(self)
         self.task_menu.addAction(self.add_task_action)
         self.task_menu.addAction(self.edit_task_action)
         self.task_menu.addAction(self.add_subtask_action)
         self.task_menu.addAction(self.assign_task_action)
         self.task_menu.addAction(self.delete_task_action)
+        self.task_menu.addAction(self.exit_task_action)
 
         self.launcher_lw.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
         self.launcher_menu = QtWidgets.QMenu(self)
@@ -896,6 +898,7 @@ class MainWindow(BaseWindow):
         self.add_subtask_action.setText(self.tr("New SubTask"))
         self.delete_task_action.setText(self.tr("Delete Task"))
         self.assign_task_action.setText(self.tr("Assign Member"))
+        self.exit_task_action.setText(self.tr("View Projects"))
 
         self.send_command_action.setText(self.tr("Send Command"))
         self.add_launcher_action.setText(self.tr("New Launcher"))

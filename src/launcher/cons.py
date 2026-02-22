@@ -143,6 +143,7 @@ class MainCons(object):
         self.view.add_subtask_action.triggered.connect(self.add_subtask)
         self.view.delete_task_action.triggered.connect(self.delete_task)
         self.view.assign_task_action.triggered.connect(self.assign_task)
+        self.view.exit_task_action.triggered.connect(self.toggle_proj)
 
         self.view.launcher_lw.customContextMenuRequested.connect(self.show_launch_menu)
         self.view.send_command_action.triggered.connect(self.send_command)
@@ -633,7 +634,12 @@ class MainCons(object):
                 self.view.task_menu.addAction(self.view.edit_task_action)
                 self.view.task_menu.addAction(self.view.delete_task_action)
                 self.view.task_menu.addAction(self.view.assign_task_action)
-            self.view.task_menu.exec_(self.view.task_lw.mapToGlobal(pos))
+            self.view.task_menu.addAction(self.view.exit_task_action)
+        else:
+            current_item = self.view.task_lw.currentItem()
+            self.view.task_menu.clear()
+            self.view.task_menu.addAction(self.view.exit_task_action)
+        self.view.task_menu.exec_(self.view.task_lw.mapToGlobal(pos))
 
     def show_launch_menu(self, pos):
         if self.model.user_role in (
@@ -651,7 +657,12 @@ class MainCons(object):
             else:
                 self.view.launcher_menu.addAction(self.view.add_launcher_action)
                 self.view.launcher_menu.addAction(self.view.paste_launcher_action)
-            self.view.launcher_menu.exec_(self.view.launcher_lw.mapToGlobal(pos))
+        else:
+            self.view.launcher_menu.clear()
+            current_item = self.view.launcher_lw.itemAt(pos)
+            if current_item:
+                self.view.launcher_menu.addAction(self.view.send_command_action)
+        self.view.launcher_menu.exec_(self.view.launcher_lw.mapToGlobal(pos))
 
     def send_command(self):
         item = self.view.launcher_lw.currentItem()

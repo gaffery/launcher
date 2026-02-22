@@ -484,6 +484,11 @@
         <translation>删除任务</translation>
     </message>
     <message>
+        <location filename="view.py" line="804"/>
+        <source>View Projects</source>
+        <translation>返回项目</translation>
+    </message>
+    <message>
         <location filename="view.py" line="966"/>
         <source>New Launcher</source>
         <translation>新建启动器</translation>

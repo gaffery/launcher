@@ -31,10 +31,18 @@ def loaderplugin():
 def authenticate(func):
     @wraps(func)
     def wrapper(self, *args, **kwargs):
-        if self.authenticated:
-            return func(self, *args, **kwargs)
-        else:
+        if not self.authenticated:
             raise Exception("User not authenticated")
+        try:
+            return func(self, *args, **kwargs)
+        except Exception as e:
+            if "Authentication failed" in str(e):
+                try:
+                    if self._auth_model.login(perform=True):
+                        return func(self, *args, **kwargs)
+                except Exception:
+                    pass
+            raise
 
     return wrapper
 
