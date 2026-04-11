@@ -208,13 +208,13 @@ class MainModel(object):
 
     @onlineable
     @authenticate
-    def add_project(self, project_name):
-        return self._auth_model._api_client.create_project(project_name)
+    def add_project(self, project_name, visibility="private"):
+        return self._auth_model._api_client.create_project(project_name, visibility)
 
     @onlineable
     @authenticate
-    def update_project(self, project_id, project_name):
-        return self._auth_model._api_client.update_project(project_id, project_name)
+    def update_project(self, project_id, project_name=None, visibility=None):
+        return self._auth_model._api_client.update_project(project_id, project_name, visibility)
 
     @onlineable
     @authenticate

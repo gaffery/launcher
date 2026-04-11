@@ -149,6 +149,26 @@ class BaseManager(object):
 
 
 class ProjectManager(BaseManager):
+    PROJECT_VISIBILITY_ROLE = QtCore.Qt.UserRole + 1
+    VISIBILITY_PUBLIC = "public"
+    VISIBILITY_PRIVATE = "private"
+    
+    def normalize_project_visibility(self, project):
+        visibility = str(project.get("visibility", "")).strip().lower()
+        if visibility in ("public", "private"):
+            return visibility
+        if project.get("is_public") is True:
+            return "public"
+        return "private"
+
+    def get_project_visibility(self, current_item=None):
+        if not current_item:
+            return "private"
+        visibility = str(current_item.data(self.PROJECT_VISIBILITY_ROLE) or "").strip().lower()
+        if visibility in ("public", "private"):
+            return visibility
+        return "private"
+
     def refresh_projects(self):
         def on_success(projects):
             if not projects:
@@ -171,6 +191,7 @@ class ProjectManager(BaseManager):
                 item = QtWidgets.QListWidgetItem()
                 item.setText(project["name"])
                 item.setData(QtCore.Qt.UserRole, project["id"])
+                item.setData(self.PROJECT_VISIBILITY_ROLE, self.normalize_project_visibility(project))
                 self.view.project_lw.addItem(item)
                 if project["id"] == current_id:
                     self.resetCurrentItem(self.view.project_lw, item)
@@ -186,7 +207,7 @@ class ProjectManager(BaseManager):
             error_callback=lambda e: print(f"Failed to get project list: {e}"),
         )
 
-    def add_project(self, name):
+    def add_project(self, name, visibility=VISIBILITY_PRIVATE):
         def on_success(result):
             if result:
                 print(f"{name} created successfully")
@@ -195,14 +216,15 @@ class ProjectManager(BaseManager):
         self.run_api_task(
             self.model.add_project,
             name,
+            visibility,
             success_callback=on_success,
             error_callback=lambda e: print(f"Failed to create project: {e}"),
         )
 
-    def edit_project(self, project_id, project_name):
+    def edit_project(self, project_id, project_name=None, visibility=None):
         def on_success(result):
             if result:
-                print(f"Rename {project_name} successfully")
+                print(f"Update {project_name} {visibility} successfully")
                 self.cons.update_config("MainUI", "task_id", "")
                 self.refresh_projects()
 
@@ -210,6 +232,7 @@ class ProjectManager(BaseManager):
             self.model.update_project,
             project_id,
             project_name,
+            visibility,
             success_callback=on_success,
             error_callback=lambda e: print(f"Failed to edit project: {e}"),
         )
@@ -266,7 +289,7 @@ class ProjectManager(BaseManager):
         dialog.setupEditProject()
         if dialog.exec_() == QtWidgets.QDialog.Accepted:
             new_name = dialog.textValue()
-            self.edit_project(project_id, new_name)
+            self.edit_project(project_id, new_name, self.get_project_visibility(current_item))
 
     def show_delete_project_dialog(self):
         current_item = self.view.project_lw.currentItem()
@@ -314,6 +337,15 @@ class ProjectManager(BaseManager):
         )
         dialog.exec_()
 
+    def show_switch_visibility_dialog(self):
+        current_item = self.view.project_lw.currentItem()
+        project_id = current_item.data(QtCore.Qt.UserRole)
+        project_name = current_item.text()
+        current_visibility = self.get_project_visibility(current_item)
+        target_visibility = self.VISIBILITY_PUBLIC
+        if current_visibility == self.VISIBILITY_PUBLIC:
+            target_visibility = self.VISIBILITY_PRIVATE
+        self.edit_project(project_id, project_name, target_visibility)
 
 class TaskManager(BaseManager):
     def __init__(self, *args, **kwargs):

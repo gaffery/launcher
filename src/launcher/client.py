@@ -168,12 +168,14 @@ class APIClient:
             }
         return None
 
-    def create_project(self, name):
-        response = self.session.post(f"{self.base_url}/projects", json={"name": name})
+    def create_project(self, name, visibility="private"):
+        payload = {"name": name, "visibility": visibility}
+        response = self.session.post(f"{self.base_url}/projects", json=payload)
         return self._handle_status(response)
 
-    def update_project(self, project_id, project_name):
-        payload = {"name": project_name}
+    def update_project(self, project_id, project_name=None, visibility=None):
+        payload = {"name": project_name, "visibility": visibility}
+        payload = {key: value for key, value in payload.items() if value is not None}
         response = self.session.put(f"{self.base_url}/projects/{project_id}", json=payload)
         return self._handle_status(response)
 

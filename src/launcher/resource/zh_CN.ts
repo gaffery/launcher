@@ -464,6 +464,11 @@
         <translation>分配成员</translation>
     </message>
     <message>
+        <location filename="view.py" line="800"/>
+        <source>Toggle Visibility</source>
+        <translation>切换可见性</translation>
+    </message>
+    <message>
         <location filename="view.py" line="802"/>
         <source>New Task</source>
         <translation>新建任务</translation>

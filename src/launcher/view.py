@@ -760,8 +760,10 @@ class MainWindow(BaseWindow):
         self.edit_project_action = QtWidgets.QAction(self)
         self.delete_project_action = QtWidgets.QAction(self)
         self.assign_project_action = QtWidgets.QAction(self)
+        self.project_visibility_action = QtWidgets.QAction(self)
         self.project_menu.addAction(self.add_project_action)
         self.project_menu.addAction(self.edit_project_action)
+        self.project_menu.addAction(self.project_visibility_action)
         self.project_menu.addAction(self.assign_project_action)
         self.project_menu.addAction(self.delete_project_action)
 
@@ -891,6 +893,7 @@ class MainWindow(BaseWindow):
         self.add_project_action.setText(self.tr("New Project"))
         self.edit_project_action.setText(self.tr("Edit Project"))
         self.delete_project_action.setText(self.tr("Delete Project"))
+        self.project_visibility_action.setText(self.tr("Toggle Visibility"))
         self.assign_project_action.setText(self.tr("Assign Member"))
 
         self.add_task_action.setText(self.tr("New Task"))

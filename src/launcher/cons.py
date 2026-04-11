@@ -135,6 +135,7 @@ class MainCons(object):
         self.view.add_project_action.triggered.connect(self.add_project)
         self.view.edit_project_action.triggered.connect(self.edit_project)
         self.view.delete_project_action.triggered.connect(self.delete_project)
+        self.view.project_visibility_action.triggered.connect(self.set_project_visibility)
         self.view.assign_project_action.triggered.connect(self.assign_project)
 
         self.view.task_lw.customContextMenuRequested.connect(self.show_task_menu)
@@ -392,6 +393,9 @@ class MainCons(object):
     def assign_project(self):
         self.project_manager.show_assign_project_dialog()
 
+    def set_project_visibility(self):
+        self.project_manager.show_switch_visibility_dialog()
+
     def add_task(self):
         self.task_manager.show_add_task_dialog()
 
@@ -617,8 +621,10 @@ class MainCons(object):
             self.view.project_menu.addAction(self.view.add_project_action)
             if current_item:
                 self.view.project_menu.addAction(self.view.edit_project_action)
-                self.view.project_menu.addAction(self.view.delete_project_action)
+                self.view.project_menu.addAction(self.view.project_visibility_action)
                 self.view.project_menu.addAction(self.view.assign_project_action)
+                self.view.project_menu.addAction(self.view.delete_project_action)
+
             self.view.project_menu.exec_(self.view.project_lw.mapToGlobal(pos))
 
     def show_task_menu(self, pos):
