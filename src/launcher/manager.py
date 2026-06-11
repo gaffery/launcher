@@ -1285,7 +1285,7 @@ class CleanCachesWorker(QtCore.QRunnable):
             acquire.load_dbmanage()
             if not acquire.dbmanage:
                 return
-            acquire.dbmanage.autoclean_caches(days=7)
+            acquire.dbmanage.autoclean_caches(days=30)
         except Exception as e:
             print(f"Failed to Clean for Caches: {e}")
 
