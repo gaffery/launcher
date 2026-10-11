@@ -9,10 +9,10 @@ req(
     "requests",
 )
 
-req(
-    "ldap3",
-    "pycryptodome",
-)
+#req(
+#    "ldap3",
+#    "pycryptodome",
+#)
 
 env("LAUNCHER_NAME").setenv(this.name)
 env("LAUNCHER_TAGS").setenv(this.tags)
